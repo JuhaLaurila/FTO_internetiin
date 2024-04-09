@@ -1,8 +1,9 @@
 
 const express = require('express')
 const app = express()
+app.use(express.static('dist'))
 
-app.use(express.json())
+//app.use(express.json())
 
 let notes = [
   {
@@ -39,6 +40,8 @@ app.get('/api/notes/:id', (request, response) => {
     response.status(404).end()
   }
 })
+
+
 
 app.get('/api/notes', (request, response) => {
   response.json(notes)
