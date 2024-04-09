@@ -26,7 +26,7 @@ const cors = require('cors')
 app.use(cors())
 
 app.get('/', (request, response) => {
-  response.send('<h1>Hello Worldi!</h1>')
+  response.send('<h1>Hello Worldi! Mikälä maksaa ku ee toomi??</h1>')
 })
 
 
