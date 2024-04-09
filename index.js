@@ -1,6 +1,7 @@
 
 const express = require('express')
 const app = express()
+express.static(root, [options])
 
 
 //app.use(express.json())
@@ -27,6 +28,7 @@ const cors = require('cors')
 app.use(cors())
 
 app.use(express.static('dist'))
+
 
 app.get('/', (request, response) => {
   response.send('<h1>Hello Worldi! Mikälä maksaa ku ee toomi??</h1>')
