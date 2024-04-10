@@ -3,7 +3,9 @@ const express = require('express')
 const app = express()
 express.static(root, [options])
 
+const cors = require('cors')
 
+app.use(cors())
 //app.use(express.json())
 
 let notes = [
