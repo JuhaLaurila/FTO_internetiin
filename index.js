@@ -1,11 +1,10 @@
 
 const express = require('express')
 const app = express()
-express.static(root, [options])
 
 const cors = require('cors')
-
 app.use(cors())
+
 //app.use(express.json())
 
 let notes = [
@@ -15,7 +14,7 @@ let notes = [
   },
   {
     id: 2,
-    content: "Browser can execute only JavaScript",
+    content: "Browseri can execute only JavaScript",
     important: false
   },
   {
@@ -24,10 +23,6 @@ let notes = [
     important: true
   }
 ]
-
-const cors = require('cors')
-
-app.use(cors())
 
 app.use(express.static('dist'))
 
@@ -89,5 +84,6 @@ app.post('/api/notes', (request, response) => {
 })
 
 const PORT = process.env.PORT || 3001
-app.listen(PORT)
-console.log(`Server running on port ${PORT}`)
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
+})
