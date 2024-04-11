@@ -14,12 +14,17 @@ let notes = [
   },
   {
     id: 2,
-    content: "Browseri can execute only JavaScript",
+    content: "Provseri can execute only JavaScript",
     important: false
   },
   {
     id: 3,
     content: "GET and POST are the most important methods of HTTP protocoll",
+    important: true
+  },
+  {
+    id: 4,
+    content: "Joo testataan vaan uutta nouttia",
     important: true
   }
 ]
