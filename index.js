@@ -27,6 +27,12 @@ let notes = [
     content: "Joo testataan vaan uutta nouttia",
     important: true
   }
+  ,
+  {
+    id: 5,
+    content: "NojJoo kattottaan mite se teplou sujjuu",
+    important: true
+  }
 ]
 
 app.use(express.static('dist'))
