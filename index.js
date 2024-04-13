@@ -30,7 +30,7 @@ let notes = [
   ,
   {
     id: 5,
-    content: "NojJoo kattottaan mite se teplou sujjuu",
+    content: "NojJoo kattottaan mite se teploumentti sujjuu",
     important: true
   }
 ]
