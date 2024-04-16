@@ -43,6 +43,7 @@ let persons = [
     }
   ]
 
+  app.use(express.static('dist'))
 
   // info-sivu, johon luettelon hlöiden lukumäärä ja pyynnön ajanhetki
   const lkm = persons.length;
