@@ -1,100 +1,131 @@
-
 const express = require('express')
 const app = express()
+const morgan = require('morgan') // morgan muuttuja käyttöön
+app.use(express.json())
 
 const cors = require('cors')
 app.use(cors())
 
-//app.use(express.json())
+// käytetään morgan middlewarea tiny-konfiguraatiolla (logaa konsoliin tiedon pyynnöstä, sen onnistumisesta ja vasteajasta)
+app.use(morgan('tiny'));
 
-let notes = [
-  {
-    id: 1,
-   important: true
-  },
-  {
-    id: 2,
-    content: "Provseri can execute only JavaScript",
-    important: false
-  },
-  {
-    id: 3,
-    content: "GET and POST are the most important methods of HTTP protocoll",
-    important: true
-  },
-  {
-    id: 4,
-    content: "Joo testataan vaan uutta nouttia",
-    important: true
+let persons = [
+    {
+    name: "Arto Hellas", 
+    number: "040-123456",
+    id: 1
+    },
+    {
+    name: "Ada Lovelace", 
+    number: "39-44-5323523",
+    id: 2
+    },
+    {
+    name: "Dan Abramov", 
+    number: "12-43-234345",
+    id: 3
+    },
+    {
+    name: "Mary Poppendieck", 
+    number: "39-23-6423122",
+    id: 4
+    }
+    ,
+    {
+    name: "Turo Tailor", 
+    number: "040-123456",
+    id: 5
+    },
+    {
+    name: "Mauri Äkäslompolo", 
+    number: "050-654321",
+    id: 6
+    }
+  ]
+
+
+  // info-sivu, johon luettelon hlöiden lukumäärä ja pyynnön ajanhetki
+  const lkm = persons.length;
+
+  app.get('/info', (request, response) => {
+    const aika = new Date();
+    response.send('<p1>Puhelinluettelossa on ' + lkm + ' henkilön tiedot.</p1><br><p2>Ajanhetki: ' + aika + '</p2>');
+  });
+  
+  // kaikkien luettelon hlöiden tiedot
+  app.get('/api/persons', (request, response) => {
+    response.json(persons)
+  })
+
+  // yksittäisen hlön tiedot
+  app.get('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const person = persons.find(person => person.id === id)
+
+    // mikäli id:llä löytyy hlö niin tulostetaan tiedot, ellei, niin 404 virheilmoitus.
+    if (person) {
+        response.json(person)
+      } else {
+        response.status(404).end()
+      }
+  })
+
+  // id:tä vastaavan henkilötiedon deletointi
+  app.delete('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    persons = persons.filter(person => person.id !== id)
+  
+    response.status(204).end()
+  })
+
+ // uuden hlön lisäys: generoidaan ensin random-funktiolla uusi id
+
+ const generateId = () => {
+    const newId = Math.floor(Math.random() * 100)
+    return newId
   }
-  ,
-  {
-    id: 5,
-    content: "NojJoo kattottaan mite se teploumentti sujjuu",
-    important: true
-  }
-]
+  
+  app.post('/api/persons', (request, response) => {
+    const body = request.body
 
-app.use(express.static('dist'))
+// jos nimi puuttuu -> virheilmoitus
+    if (!body.name) {
+      return response.status(400).json({ 
+        error: 'nimi puuttuu' 
+      })
+    }
 
+    // jos numero puuttuu -> virheilmoitus
+    if (!body.number) {
+        return response.status(400).json({ 
+          error: 'numero puuttuu' 
+        })
+      }
 
-app.get('/', (request, response) => {
-  response.send('<h1>Hello Worldi! Mikälä maksaa ku ee toomi??</h1>')
-})
-
-
-app.get('/api/notes/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const note = notes.find(note => note.id === id)
-  if (note) {
-    response.json(note)
-  } else {
-    response.status(404).end()
-  }
-})
-
-
-
-app.get('/api/notes', (request, response) => {
-  response.json(notes)
-})
-
-app.delete('/api/notes/:id', (request, response) => {
-  const id = Number(request.params.id)
-  notes = notes.filter(note => note.id !== id)
-
-  response.status(204).end()
-})
+   // jos nimi on jo olemassa  -> virheilmoitus
+      if (persons.find(person => person.name === body.name)) {
+        return response.status(400).json({ error: 'Nimi on jo luettelossa' });
+      }
+    // jos numero on jo olemassa  -> virheilmoitus
+      if (persons.find(person => person.number === body.number)) {
+        return response.status(400).json({ error: 'Numero on jo luettelossa' });
+      }
 
 
-const generateId = () => {
-  const maxId = notes.length > 0
-    ? Math.max(...notes.map(n => n.id))
-    : 0
-  return maxId + 1
-}
+      // jos ok, lisätään luetteloon
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: generateId(),
+      }
+  
+    persons = persons.concat(person)
+  
+    response.json(person)
+  })
 
-app.post('/api/notes', (request, response) => {
-  const body = request.body
 
-  if (!body.content) {
-    return response.status(400).json({ 
-      error: 'content missing' 
-    })
-  }
-
-  const note = {
-    content: body.content,
-    important: body.important || false,
-    id: generateId(),
-  }
-
-  notes = notes.concat(note)
-
-  response.json(note)
-})
-
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
+  const PORT = process.env.PORT || 3001
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
+  })
