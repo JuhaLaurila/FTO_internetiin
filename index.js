@@ -3,11 +3,12 @@ const app = express()
 const morgan = require('morgan') // morgan muuttuja käyttöön
 app.use(express.json())
 
-const cors = require('cors')
-app.use(cors())
-
 // käytetään morgan middlewarea tiny-konfiguraatiolla (logaa konsoliin tiedon pyynnöstä, sen onnistumisesta ja vasteajasta)
 app.use(morgan('tiny'));
+
+const cors = require('cors')
+
+app.use(cors())
 
 let persons = [
     {
@@ -20,10 +21,14 @@ let persons = [
     number: "39-44-5323523",
     id: 2
     },
+
     {
+
     name: "Dan Abramov", 
     number: "12-43-234345",
     id: 3
+
+
     },
     {
     name: "Mary Poppendieck", 
@@ -37,13 +42,12 @@ let persons = [
     id: 5
     },
     {
-    name: "Mauri Äkäslompolo", 
+    name: "Maurilio Äkäslompolo", 
     number: "050-654321",
     id: 6
     }
   ]
 
-  app.use(express.static('dist'))
 
   // info-sivu, johon luettelon hlöiden lukumäärä ja pyynnön ajanhetki
   const lkm = persons.length;
@@ -96,12 +100,13 @@ let persons = [
       })
     }
 
-    // jos numero puuttuu -> virheilmoitus
+    // jos  numero puuttuu -> virheilmoitus
     if (!body.number) {
         return response.status(400).json({ 
           error: 'numero puuttuu' 
         })
       }
+
 
    // jos nimi on jo olemassa  -> virheilmoitus
       if (persons.find(person => person.name === body.name)) {
@@ -126,7 +131,6 @@ let persons = [
   })
 
 
-  const PORT = process.env.PORT || 3001
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
-  })
+const PORT = 3001
+app.listen(PORT)
+console.log(`Server running on port ${PORT}`)
